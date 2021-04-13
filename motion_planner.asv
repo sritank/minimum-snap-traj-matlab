@@ -57,7 +57,6 @@ classdef motion_planner
 
             traj_arr = zeros(1, obj.ITERATION_TIMES);
             acc_arr = zeros(1, obj.ITERATION_TIMES);
-            vel_arr = zeros(1, obj.ITERATION_TIMES);
             time_arr = zeros(1, obj.ITERATION_TIMES);
             
             %plot trajectories
@@ -71,7 +70,7 @@ classdef motion_planner
                 for j = 1: traj_plot_times
                     %update trajectory array
                     traj_arr(elapsed_index + j) = traj_gen.calc_7th_polynomial(traj_coeff(i, :), (j-1) * time_step);
-                    vel_arr(elapsed_index + j) = traj_gen.calc_6th_polynomial(traj_coeff(i, :), (j-1) * time_step);
+                    acc_arr(elapsed_index + j) = traj_gen.calc_6th_polynomial(traj_coeff(i, :), (j-1) * time_step);
                     acc_arr(elapsed_index + j) = traj_gen.calc_5th_polynomial(traj_coeff(i, :), (j-1) * time_step);
                     %update elapsed time array
                     time_arr(elapsed_index + j) = (elapsed_index + j - 1) * time_step;
@@ -87,9 +86,9 @@ classdef motion_planner
             total_flight_time = traj_gen.get_total_flight_time(obj.flight_times, obj.traj_size);
             obj.ITERATION_TIMES = uint16(total_flight_time * obj.PLOT_TIMES_PER_SECOND);
             
-            [x_traj_arr, ~,x_acc_arr, time_arr] = plot_1d_trajectory(obj, obj.x_traj_coeffs);
-            [y_traj_arr, ~,y_acc_arr, time_arr] = plot_1d_trajectory(obj, obj.y_traj_coeffs);
-            [z_traj_arr, ~,z_acc_arr, time_arr] = plot_1d_trajectory(obj, obj.z_traj_coeffs);
+            [x_traj_arr, x_acc_arr, time_arr] = plot_1d_trajectory(obj, obj.x_traj_coeffs);
+            [y_traj_arr, y_acc_arr, time_arr] = plot_1d_trajectory(obj, obj.y_traj_coeffs);
+            [z_traj_arr, z_acc_arr, time_arr] = plot_1d_trajectory(obj, obj.z_traj_coeffs);
 %             x_traj_arr(end)=[];
 %             y_traj_arr(end)=[];
 %             z_traj_arr(end)=[];

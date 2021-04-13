@@ -31,7 +31,7 @@ classdef trajectory_generator
             Q(8, 8) = b3 * b3 * (1/7) * t^7;
         end
         
-        function traj_coeff_list = plan_optimized_segment(obj, waypoints, t, traj_size)
+        function [traj_coeff_list, fval] = plan_optimized_segment(obj, waypoints, t, traj_size)
             H = zeros(traj_size*8, traj_size*8);
             
             %construct hessian matrix
@@ -120,7 +120,7 @@ classdef trajectory_generator
             %size(A)
             %size(d)
             
-            traj_polys = quadprog(H, [], [], [], A, d);
+            [traj_polys,fval] = quadprog(H, [], [], [], A, d);
             
             traj_coeff_list = zeros(traj_size, 8);
             for i = 1: traj_size
@@ -156,6 +156,25 @@ classdef trajectory_generator
                      c(6)*t^5 + ...
                      c(7)*t^6 + ...
                      c(8)*t^7;
+        end
+        
+        function result=calc_5th_polynomial(obj, c, t)
+            result = 2*c(3)* + ...
+                     6*c(4)*t + ...
+                     12*c(5)*t^2 + ...
+                     20*c(6)*t^3 + ...
+                     30*c(7)*t^4 + ...
+                     42*c(8)*t^5;
+        end
+        
+        function result=calc_6th_polynomial(obj, c, t)
+            result = c(2) + ...
+                     2*c(3)*t + ...
+                     3*c(4)*t^2 + ...
+                     4*c(5)*t^3 + ...
+                     5*c(6)*t^4 + ...
+                     6*c(7)*t^5 + ...
+                     7*c(8)*t^6;
         end
     end
 end
