@@ -15,6 +15,6 @@ traj_flight_times(2) = 1;
 traj_flight_times(3) = 1;
 traj_flight_times(4) = 1;
 
-mp = init(mp, waypoints, traj_flight_times, traj_num);
+mp = init(mp, waypoints, traj_flight_times, traj_num,0);
 mp = plan_trajectory(mp);
 plot_trajectories(mp);

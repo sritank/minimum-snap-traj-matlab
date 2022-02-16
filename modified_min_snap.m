@@ -3,7 +3,6 @@
 
 mp = motion_planner;
 mp_plus_hg = motion_planner;
-traj_num = 6;
 
 step_size=1;
 alpha = 0.1;
@@ -36,7 +35,7 @@ traj_num = size(waypoints,1)-1;
 % traj_flight_times(5) = 1;
 % traj_flight_times(6) = 1;
 
-traj_flight_times = 5*ones(1,traj_num);
+traj_flight_times = 6*ones(1,traj_num);
 % traj_flight_times = [5.4664    3.9146    5.1870    4.6538    3.4244    7.3537];
 % traj_flight_times = [6.5 7 6.5];
 
@@ -66,10 +65,11 @@ while(step_size>threshold)
 %     mp.fval
     step_size
     if iter>iter_max
+        disp('max iterations reached')
         break
     end
 end
-eta=0.95;
+eta=0.98;
 ubar=10.5;
 while(1)
     [time_arr, x_acc_arr, y_acc_arr, z_acc_arr] = acc_trajectories(mp);
@@ -86,7 +86,7 @@ end
 
 
 [time_arr, x_acc_arr, y_acc_arr, z_acc_arr, x_vel_arr,  y_vel_arr,  z_vel_arr, x_traj_arr,y_traj_arr,z_traj_arr] = acc_vel_pos_trajectories(mp);
-trim_length=15;
+trim_length=12;
 
 time_arr(end-trim_length:end)=[];
 x_acc_arr(end-trim_length:end)=[];
@@ -100,6 +100,8 @@ y_traj_arr(end-trim_length:end)=[];
 z_traj_arr(end-trim_length:end)=[];
 
 % plot_trajectories(mp);
+% figure
+% plot(x_acc_arr)
 
 % mp.fval
 

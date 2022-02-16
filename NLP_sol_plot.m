@@ -3,12 +3,29 @@ clc
 % load Optim_planner_data
 
 % l=length(X);
-% ubar = 10.5;
+ubar = 10.5;
 
 time_waypo=[];
 mu_waypo = [];
 sigma_waypo = [];
 res_waypo = [];
+
+waypoints = [31.2082,   61.8123,  121.9200;
+            31.2082,  220.6041,  121.9200;
+            31.2082,  379.3959,  121.9200;
+            31.2082,  538.1877,  121.9200;
+            127.0694,  538.1877,  121.9200;
+            127.0694,  379.3959,  121.9200;
+            127.0694,  220.6041,  121.9200;
+            127.0694,   61.8123,  121.9200;
+            222.9306,   61.8123,  121.9200;
+            222.9306,  220.6041,  121.9200;
+            222.9306,  379.3959,  121.9200;
+            222.9306,  538.1877,  121.9200;
+            318.7918,  538.1877,  121.9200;
+            318.7918,  379.3959,  121.9200;
+            318.7918,  220.6041,  121.9200;
+            318.7918,   61.8123,  121.9200];
 
 trajectory = load('variableData_latest.txt');
 N=length(trajectory)/10;
@@ -41,7 +58,7 @@ g = g/ubar;%(2*9.81); %non-dimensionalizing with respect to max thrust.
 t_anal_total = 0;
 t_num_total = 0;
 
-modified_min_snap;
+% modified_min_snap;
 
 %% solving
 for i=1:2:N-1%l-1
@@ -115,6 +132,7 @@ u_n2 = [acc(1,i+1); acc(2,i+1); acc(3,i+1)];
     p2 = plot(t_num_total+[t_trajectory(i):0.01:t_trajectory(i)+t_trajectory(i+1)],[t_trajectory(i):0.01:t_trajectory(i)+t_trajectory(i+1)]*0+u_n2(2),'--g','linewidth',2);
     p3 = plot(t_num_total+[t_trajectory(i):0.01:t_trajectory(i)+t_trajectory(i+1)],[t_trajectory(i):0.01:t_trajectory(i)+t_trajectory(i+1)]*0+u_n2(3),'--b','linewidth',2);
     p4 = plot(t_num_total+[t_trajectory(i):0.01:t_trajectory(i)+t_trajectory(i+1)],[t_trajectory(i):0.01:t_trajectory(i)+t_trajectory(i+1)]*0+norm(u_n2),'--k','linewidth',2);
+    
     hold off
     grid on
     
@@ -143,52 +161,57 @@ u_n2 = [acc(1,i+1); acc(2,i+1); acc(3,i+1)];
 % end
 end
 % figure
-fig2=figure(2)
-
-% legend([p5,p6,p7,p8,p1,p2,p3,p4],'theo u_x', 'theo u_y', 'theo u_z','u bar theo', 'u_x numerical','u_y numerical','u_z numerical','u bar num');
-% legend([p1,p2,p3,p4,p5,p6,p7], 'u_x numerical','u_y numerical','u_z numerical','u bar num');
-legend([p1,p2,p3,p4], 'u_x numerical','u_y numerical','u_z numerical','u bar num');
-
-
-xlim([0,30]);
-t_traj = t_trajectory([1:2:end-2])+t_trajectory([2:2:end-1]);
-xlabel('time(s)');
-ylabel('input,u^*, (N)');
-set(gca,'Fontsize',25)
+% fig2=figure(2)
+% hold on
+% p23 = plot(time_arr, x_acc_arr, 'm', 'linewidth', 2);
+% p24 = plot(time_arr, y_acc_arr, 'g', 'linewidth', 2);
+% p25 = plot(time_arr, z_acc_arr+9.81, 'b', 'linewidth', 2);
+% p26 = plot(time_arr, sqrt(x_acc_arr.^2+y_acc_arr.^2+(z_acc_arr+9.81).^2), 'k', 'linewidth', 2);
+% % legend([p5,p6,p7,p8,p1,p2,p3,p4],'theo u_x', 'theo u_y', 'theo u_z','u bar theo', 'u_x numerical','u_y numerical','u_z numerical','u bar num');
+% % legend([p1,p2,p3,p4,p5,p6,p7], 'u_x numerical','u_y numerical','u_z numerical','u bar num');
+% legend([p1,p2,p3,p4,p23,p24,p25,p26], 'u_x NLP','u_y NLP','u_z NLP','\norm{u} NLP', 'u_x min snap','u_y min snap','u_z min snap','\norm{u} min snap');
+% 
 
 
-fig1=figure(1)
-hold on
-g2 = plot3(x_traj_arr,y_traj_arr,z_traj_arr,'b','linewidth',2);
-xlabel('X(m)');
-ylabel('Y(m)');
-legend([g1,g2],'NLP path','Modified min snap');
-set(gca,'Fontsize',25)
-axis equal
-hold off
-
-fig3 = figure(3)
-hold on
-p13 = plot(time_arr, x_vel_arr, 'm', 'linewidth', 2);
-p14 = plot(time_arr, y_vel_arr, 'g', 'linewidth', 2);
-p15 = plot(time_arr, z_vel_arr, 'b', 'linewidth', 2);
-% legend([p13,p14,p15,p16,p9,p10,p11,p12,p17],'theo v_x', 'theo v_y', 'theo v_z','u bar theo', 'v_x numerical','v_y numerical','v_z numerical','u bar num','Hamiltonian');
-% legend([p9,p10,p11,p12, p13, p14, p15],'v_x numerical','v_y numerical','v_z numerical','u bar num');
-legend([p9, p10, p11, p13, p14, p15],'v_x numerical','v_y numerical','v_z numerical','v_x min snap','v_y min snap','v_z min snap');
-
-xlim([0,30]);
-xlabel('time(s)');
-ylabel('vel, (m/s)');
-set(gca,'Fontsize',25)
-hold off
+% xlim([0,30]);
+% t_traj = t_trajectory([1:2:end-2])+t_trajectory([2:2:end-1]);
+% xlabel('time(s)');
+% ylabel('input,u^*, (N)');
+% set(gca,'Fontsize',25)
 
 
-fig4 = figure(4)
-bar([traj_flight_times;t_traj]')
-hold on
-% bar(t_traj)
-legend('modified min snap','NLP solution')
-xlabel('waypoint');
-ylabel('time');
-set(gca,'Fontsize',25)
+% fig1=figure(1)
+% hold on
+% g2 = plot3(x_traj_arr,y_traj_arr,z_traj_arr,'b','linewidth',2);
+% xlabel('X(m)');
+% ylabel('Y(m)');
+% legend([g1,g2],'NLP path','Modified min snap');
+% set(gca,'Fontsize',25)
+% axis equal
+% hold off
+% 
+% fig3 = figure(3)
+% hold on
+% p13 = plot(time_arr, x_vel_arr, 'm', 'linewidth', 2);
+% p14 = plot(time_arr, y_vel_arr, 'g', 'linewidth', 2);
+% p15 = plot(time_arr, z_vel_arr, 'b', 'linewidth', 2);
+% % legend([p13,p14,p15,p16,p9,p10,p11,p12,p17],'theo v_x', 'theo v_y', 'theo v_z','u bar theo', 'v_x numerical','v_y numerical','v_z numerical','u bar num','Hamiltonian');
+% % legend([p9,p10,p11,p12, p13, p14, p15],'v_x numerical','v_y numerical','v_z numerical','u bar num');
+% legend([p9, p10, p11, p13, p14, p15],'v_x numerical','v_y numerical','v_z numerical','v_x min snap','v_y min snap','v_z min snap');
+% 
+% xlim([0,30]);
+% xlabel('time(s)');
+% ylabel('vel, (m/s)');
+% set(gca,'Fontsize',25)
+% hold off
+% 
+% 
+% fig4 = figure(4)
+% bar([traj_flight_times;t_traj]')
+% hold on
+% % bar(t_traj)
+% legend('modified min snap','NLP solution')
+% xlabel('waypoint');
+% ylabel('time');
+% set(gca,'Fontsize',25)
 
